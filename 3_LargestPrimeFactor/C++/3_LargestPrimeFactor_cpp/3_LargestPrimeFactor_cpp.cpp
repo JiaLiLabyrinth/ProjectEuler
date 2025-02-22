@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cstdint>
 using namespace std;
 
 long largestPrimeFactor(long number) {
@@ -49,26 +50,28 @@ long largestPrimeFactor(long number) {
     return largestPrimeFac;
 }
 
-long largestPrimeFactor_2(long number) {
-    long remProd = number;
-    long testPrime;
-    long retPrimeFac = 1;
-    vector<long> primeNumbers;  // List of known prime numbers less than remProd
-    vector<long> primeFactors;  // List of known prime factors of number
+uint64_t largestPrimeFactor_2(uint64_t number) {
+    uint64_t remProd = number;
+    uint64_t testPrime;
+    uint64_t retPrimeFac = 1;
+    vector<uint64_t> primeNumbers;  // List of known prime numbers less than remProd
+    vector<uint64_t> primeFactors;  // List of known prime factors of number
 
     testPrime = 2;
     primeNumbers.push_back(testPrime);
 
-    if (number < testPrime)
+    if (number < 2 || number > 0x7fffffffffffffff)
     {
-        cout << "Invalid value! Number has to be larger or equal to 2!";
+        cout << "Invalid value! Number has to be between 2 to " << 0x7fffffffffffffff << endl;
         return number;
     }
 
     // Starting from 2, check to see if remProd is dividable by testPrime
     while (remProd >= testPrime)
     {
+#ifdef _DEBUG
         cout << "Calculating " << remProd << '/' << testPrime << "...\n";
+#endif // DEBUG
         if (remProd % testPrime == 0)
         {   // If remProd is diviable by testPrime
             // Mark testPrime as a PrimeFactor, if not already
@@ -88,7 +91,7 @@ long largestPrimeFactor_2(long number) {
             {
                 bool isDividible = false;
                 // Test if i is a prime number
-                for (long j = 0; isDividible == false && j < primeNumbers.size(); j++)
+                for (uint64_t j = 0; isDividible == false && j < primeNumbers.size(); j++)
                 {
                     if ( testPrime % primeNumbers[j] == 0)
                     {
@@ -99,7 +102,9 @@ long largestPrimeFactor_2(long number) {
                 if (!isDividible)
                 {
                     primeNumbers.push_back( testPrime );
+#ifdef _DEBUG
                     cout << "\t[P] Next testing prime: " << testPrime << endl;
+#endif // DEBUG
                     break;
                 }
             }
@@ -119,11 +124,12 @@ long largestPrimeFactor_2(long number) {
 
 int main()
 {
-    long eVal = 0;
+    uint64_t eVal = 0;
     cout << "Enter a number: ";
     cin >> eVal;
 
-    long largestPrime = largestPrimeFactor_2(eVal);
+    cout << "Searching prime factors for " << eVal << "!!" << endl;
+    uint64_t largestPrime = largestPrimeFactor_2(eVal);
     cout << "Largest factor for " << eVal << " is " << largestPrime << endl;
 
     return 0;
