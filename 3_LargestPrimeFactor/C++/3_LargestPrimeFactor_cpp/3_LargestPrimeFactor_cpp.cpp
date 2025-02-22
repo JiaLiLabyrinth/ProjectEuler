@@ -49,13 +49,81 @@ long largestPrimeFactor(long number) {
     return largestPrimeFac;
 }
 
+long largestPrimeFactor_2(long number) {
+    long remProd = number;
+    long testPrime;
+    long retPrimeFac = 1;
+    vector<long> primeNumbers;  // List of known prime numbers less than remProd
+    vector<long> primeFactors;  // List of known prime factors of number
+
+    testPrime = 2;
+    primeNumbers.push_back(testPrime);
+
+    if (number < testPrime)
+    {
+        cout << "Invalid value! Number has to be larger or equal to 2!";
+        return number;
+    }
+
+    // Starting from 2, check to see if remProd is dividable by testPrime
+    while (remProd >= testPrime)
+    {
+        cout << "Calculating " << remProd << '/' << testPrime << "...\n";
+        if (remProd % testPrime == 0)
+        {   // If remProd is diviable by testPrime
+            // Mark testPrime as a PrimeFactor, if not already
+            if (primeFactors.size() <= 0 || primeFactors.back() != testPrime)
+            {
+                primeFactors.push_back(testPrime);
+                cout << "\t[F] Found new prime factor => " << testPrime << endl;
+            }
+
+            // Update remProd value
+            remProd /= testPrime;
+            cout << "\t[R] remProd update => " << remProd << endl;
+        }
+        else
+        {   // If remProd is not dividble by testPrime, move onto the next prime number
+            for ( testPrime = testPrime + 1; testPrime <= remProd; testPrime++)
+            {
+                bool isDividible = false;
+                // Test if i is a prime number
+                for (long j = 0; isDividible == false && j < primeNumbers.size(); j++)
+                {
+                    if ( testPrime % primeNumbers[j] == 0)
+                    {
+                        isDividible = true;
+                    }
+                }
+                // If the i is not dividible by any of the known prime number, it's a prime number as well
+                if (!isDividible)
+                {
+                    primeNumbers.push_back( testPrime );
+                    cout << "\t[P] Next testing prime: " << testPrime << endl;
+                    break;
+                }
+            }
+        }
+    }
+
+    cout << "Found Prime Factors for " << number << "...\n";
+    for( int k = 0; k < primeFactors.size(); k++ )
+    { 
+        cout << primeFactors[k] << ' ';
+    }
+    cout << endl;
+
+    retPrimeFac = primeFactors.back();
+    return retPrimeFac;
+}
+
 int main()
 {
     long eVal = 0;
     cout << "Enter a number: ";
     cin >> eVal;
 
-    long largestPrime = largestPrimeFactor(eVal);
+    long largestPrime = largestPrimeFactor_2(eVal);
     cout << "Largest factor for " << eVal << " is " << largestPrime << endl;
 
     return 0;
