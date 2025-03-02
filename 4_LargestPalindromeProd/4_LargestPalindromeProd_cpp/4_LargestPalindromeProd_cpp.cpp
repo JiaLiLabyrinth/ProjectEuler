@@ -8,11 +8,17 @@ using namespace std;
 
 bool isPalindromic(long val)
 {
-    bool ret = false;
+    bool ret = true;
     string strNum = to_string(val);
 
     int iBegin, iEnd;
-    for( iBegin = 0, iEnd = strNum.length() - 1; iBegin < iEnd )
+    for (iBegin = 0, iEnd = strNum.length() - 1; iBegin < iEnd && ret; iBegin++, iEnd--)
+    {
+        if (strNum[iBegin] != strNum[iEnd])
+        {
+            ret = false;
+        }
+    }
 
     return ret;
 }
@@ -26,6 +32,7 @@ int main()
     int num1, num2;
     int minNum, maxNum;
     long product;
+    long maxPalProd = 0 ;
 
     // Establish the min/max number for the number of digits given
     minNum = int( pow(10, digits - 1) );
@@ -34,16 +41,24 @@ int main()
     cout << "Finding largest palindrome with multiples between " << minNum << '~' << maxNum << endl;
     for (num1 = maxNum; num1 >= minNum; num1--)
     {
-        for (num2 = maxNum; num2 >= minNum; num2--)
+        for (num2 = num1; num2 >= minNum; num2--)
         {
             product = num1 * num2;
-            if (isPalindromic)
+#ifdef _DEBUG
+            cout << num1 << " x " << num2 << " = " << product << endl;
+#endif // _DEBUG
+            if (isPalindromic( product ) )
             {
-                cout << "Found Palindromic Value => " << product << endl;
-                break;
+                cout << "Found Palindromic Value => " << product << " = " << num1 << " x " << num2 << endl;
+                if (maxPalProd < product)
+                {
+                    maxPalProd = product;
+                }
             }
         }
     }
+
+    cout << "Found max Palindromic: " << maxPalProd << endl;
 
     return 0;
 }
